@@ -1,5 +1,5 @@
 import { useDiagnosis } from '../../../context/DiagnosisContext';
-import { SYMPTOM_MAP } from '../../../data/symptomMap';
+import { DIAGNOSIS_RULES } from '../../../data/mockData';
 import Badge from '../../../components/ui/Badge';
 import Card from '../../../components/ui/Card';
 import Button from '../../../components/ui/Button';
@@ -70,17 +70,17 @@ export default function ResultDisplay() {
     return <NoMatchResult onGoBack={actions.goBack} onReset={actions.reset} />;
   }
 
-  const { disease, severity, treatment, confidence, matched = [] } = diagnosisResult;
+  const { disease, severity, treatment, confidence, matched = [], description } = diagnosisResult;
   const timestamp = formatTimestamp(new Date());
 
   // Resolve full labels for matched symptoms
-  const cropSymptoms = SYMPTOM_MAP[selectedCrop]?.symptoms ?? [];
+  const cropSymptoms = DIAGNOSIS_RULES[selectedCrop]?.symptoms ?? [];
   const matchedLabels = (matched ?? []).map(
     (id) => cropSymptoms.find((s) => s.id === id)?.label ?? id
   );
 
   return (
-    <section aria-labelledby="result-heading" className="w-full space-y-5">
+    <section aria-labelledby="result-heading" className="w-full max-w-4xl mx-auto space-y-5">
       <div className="flex items-start justify-between gap-3">
         <h2 id="result-heading" className="text-2xl font-extrabold text-gray-800">
           Diagnosis Result
@@ -98,6 +98,12 @@ export default function ResultDisplay() {
         <p className="text-sm text-gray-600 mb-4">
           {buildDiagnosisSummary(selectedCrop, disease, severity)}
         </p>
+
+        {description && (
+          <p className="text-sm text-gray-500 italic border-l-2 border-green-200 pl-3 mb-4">
+            {description}
+          </p>
+        )}
 
         <ConfidenceMeter confidence={confidence} />
 

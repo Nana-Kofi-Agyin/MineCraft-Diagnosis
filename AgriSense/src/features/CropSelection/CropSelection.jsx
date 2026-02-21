@@ -1,4 +1,4 @@
-import { CROPS } from '../../data/symptomMap';
+import { CROPS } from '../../data/mockData';
 import { useDiagnosis } from '../../context/DiagnosisContext';
 
 /**

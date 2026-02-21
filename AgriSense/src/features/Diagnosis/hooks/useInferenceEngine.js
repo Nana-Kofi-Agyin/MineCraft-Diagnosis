@@ -4,11 +4,14 @@ import { runDiagnosis } from '../services/api';
 
 /**
  * useInferenceEngine
- * Custom hook that wraps the diagnosis service and wires results
+ * Custom hook that wraps the Mock Diagnosis Service and wires results
  * directly into the global DiagnosisContext.
  *
+ * All errors are caught here so the app never crashes on Vercel
+ * even if runDiagnosis throws unexpectedly.
+ *
  * Returns:
- *   diagnose()  — async function that triggers the inference engine
+ *   diagnose()  — async function that triggers the mock inference engine
  *   isLoading   — boolean
  *   error       — string | null
  */
@@ -34,11 +37,11 @@ export function useInferenceEngine() {
       const result = await runDiagnosis(selectedCrop, activeSymptoms);
       actions.setResult(result);
     } catch (err) {
+      // Catch any unexpected runtime errors so the app never crashes.
+      const message =
+        err?.message ?? 'An unexpected error occurred. Please try again.';
       console.error('[useInferenceEngine] Diagnosis failed:', err);
-      actions.setError(
-        err?.message
-          ?? 'Unable to reach the inference engine. Please try again.'
-      );
+      actions.setError(message);
     }
   }, [state, actions]);
 

@@ -1,4 +1,4 @@
-import { SYMPTOM_MAP } from '../../../data/symptomMap';
+import { DIAGNOSIS_RULES } from '../../../data/mockData';
 import { useDiagnosis } from '../../../context/DiagnosisContext';
 import { useInferenceEngine } from '../hooks/useInferenceEngine';
 import Button from '../../../components/ui/Button';
@@ -54,7 +54,7 @@ export default function SymptomSelector() {
   const { state, actions } = useDiagnosis();
   const { diagnose, isLoading, error } = useInferenceEngine();
 
-  const cropData = SYMPTOM_MAP[state.selectedCrop];
+  const cropData = DIAGNOSIS_RULES[state.selectedCrop];
   if (!cropData) return null;
 
   const { symptoms } = cropData;
@@ -99,10 +99,10 @@ export default function SymptomSelector() {
         </div>
       )}
 
-      {/* Loading spinner (inline, not overlay) */}
+      {/* Loading spinner */}
       {isLoading && (
         <div className="mt-4">
-          <LoadingSpinner message="Running forward-chaining inference engine…" />
+          <LoadingSpinner message="Processing Symptoms…" />
         </div>
       )}
 
